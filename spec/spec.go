@@ -55,6 +55,25 @@ func LoadAll(dir string) (specs []Spec, err error) {
 	return specs, nil
 }
 
+func (s *Spec) CreateSQL(tablename string) string {
+	rows := []string{}
+
+	rows = append(rows, fmt.Sprintf("CREATE TABLE `%s` (", tablename))
+	for _, col := range s.Columns {
+		switch col.Datatype {
+		case TextType:
+			rows = append(rows, fmt.Sprintf("`%s` VARCHAR(%d) NOT NULL;", col.Name, col.Width))
+		case BoolType, IntType:
+			rows = append(rows, fmt.Sprintf("`%s` INTEGER NOT NULL;", col.Name))
+		default:
+			panic(fmt.Errorf("unknown Datatype: %#v", col.Datatype))
+		}
+	}
+	rows = append(rows, ");")
+
+	return strings.Join(rows, "\n")
+}
+
 func load(path string) (spec Spec, err error) {
 	spec = Spec{
 		Name: stripExtension(filepath.Base(path)),
@@ -120,6 +139,8 @@ func loadColumn(headers, record []string) (col Column, err error) {
 
 	return col, nil
 }
+
+// -- utils
 
 func mapify(headers, values []string) (m map[string]string, err error) {
 	if len(headers) != len(values) {

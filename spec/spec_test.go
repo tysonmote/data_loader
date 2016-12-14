@@ -55,6 +55,12 @@ func TestLoadColumn(t *testing.T) {
 	// TODO
 }
 
+func TestCreateSQL(t *testing.T) {
+	// TODO
+}
+
+// -- utils
+
 func TestMapify(t *testing.T) {
 	// TODO
 }
