@@ -20,17 +20,23 @@ const (
 	IntType  Datatype = iota
 )
 
+// Spec contains information about a file format: the name, and definitions for
+// each column in a data file.
 type Spec struct {
 	Name    string
 	Columns []Column
 }
 
+// Column contains specifications for one column in a data file.
 type Column struct {
 	Name     string
 	Width    int
 	Datatype Datatype
 }
 
+// LoadAllSpecs finds all valid spec files in the given directory and returns
+// them in a map that is keyed by the format name. Invalid spec files cause
+// a warning message to be logged and are then skipped from the returned map.
 func LoadAllSpecs(dir string) (specs map[string]Spec, err error) {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {

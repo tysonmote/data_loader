@@ -11,6 +11,8 @@ import (
 	"strings"
 )
 
+// DataFile contains metadata about a data file whose format is specified by
+// a Spec.
 type DataFile struct {
 	Name      string
 	Spec      Spec
@@ -18,6 +20,9 @@ type DataFile struct {
 	namedSpec string
 }
 
+// AllDataFiles loads metadata for all data files in the given directory. If
+// any data files use a format not contained in the given specs, a warning is
+// logged and the data file is excluded from the returned results.
 func AllDataFiles(specs map[string]Spec, dir string) (dfs []DataFile, err error) {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {

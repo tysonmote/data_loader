@@ -8,6 +8,7 @@ import (
 )
 
 const (
+	// Settings
 	dbPath   = "./data.db"
 	specPath = "./specs/"
 	dataPath = "./data/"
@@ -62,7 +63,7 @@ func loadDataFiles(dfs []DataFile) error {
 	defer db.Close()
 
 	for _, df := range dfs {
-		stmt, err := db.Prepare(PreparedStatementSQL(df.Spec.Name, df))
+		stmt, err := db.Prepare(PreparedStatementSQL(df.Spec.Name, df.Spec))
 		if err != nil {
 			return err
 		}

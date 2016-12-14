@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// CreateTableSQL returns the "CREATE TABLE" SQL statement for a given Spec.
 func CreateTableSQL(tablename string, spec Spec) string {
 	rows := []string{}
 
@@ -25,9 +26,11 @@ func CreateTableSQL(tablename string, spec Spec) string {
 	return strings.Join(rows, "\n")
 }
 
-func PreparedStatementSQL(tablename string, df DataFile) string {
-	names := make([]string, len(df.Spec.Columns))
-	for i, col := range df.Spec.Columns {
+// PreparedStatementSQL returns a SQL query that can be used as a prepared
+// statement to load rows from the given Spec.
+func PreparedStatementSQL(tablename string, spec Spec) string {
+	names := make([]string, len(spec.Columns))
+	for i, col := range spec.Columns {
 		names[i] = col.Name
 	}
 
