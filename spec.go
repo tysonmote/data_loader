@@ -31,47 +31,29 @@ type Column struct {
 	Datatype Datatype
 }
 
-func LoadAll(dir string) (specs []Spec, err error) {
+func LoadAllSpecs(dir string) (specs map[string]Spec, err error) {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return specs, err
 	}
 
-	specs = []Spec{}
+	specs = map[string]Spec{}
 	for _, file := range files {
 		path := filepath.Join(dir, file.Name())
 		if file.IsDir() || !strings.HasSuffix(path, ".csv") {
-			log.Printf("Skipping %s", path)
+			log.Printf("Skipping unrecognized spec file: %s", path)
 			continue
 		}
+		log.Printf("Loading spec: %s", path)
 		spec, err := load(path)
 		if err != nil {
 			log.Printf("WARNING: Couldn't read %s: %s", path, err)
 		}
 
-		specs = append(specs, spec)
+		specs[spec.Name] = spec
 	}
 
 	return specs, nil
-}
-
-func (s *Spec) CreateSQL(tablename string) string {
-	rows := []string{}
-
-	rows = append(rows, fmt.Sprintf("CREATE TABLE `%s` (", tablename))
-	for _, col := range s.Columns {
-		switch col.Datatype {
-		case TextType:
-			rows = append(rows, fmt.Sprintf("`%s` VARCHAR(%d) NOT NULL;", col.Name, col.Width))
-		case BoolType, IntType:
-			rows = append(rows, fmt.Sprintf("`%s` INTEGER NOT NULL;", col.Name))
-		default:
-			panic(fmt.Errorf("unknown Datatype: %#v", col.Datatype))
-		}
-	}
-	rows = append(rows, ");")
-
-	return strings.Join(rows, "\n")
 }
 
 func load(path string) (spec Spec, err error) {

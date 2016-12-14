@@ -2,14 +2,18 @@ package main
 
 import "testing"
 
-func TestLoadAll(t *testing.T) {
-	specs, err := LoadAll("./fixtures")
+func TestLoadAllSpecs(t *testing.T) {
+	specs, err := LoadAllSpecs("./fixtures")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	if len(specs) != 1 {
 		t.Fatalf("expected 1 spec, got %d", len(specs))
+	}
+
+	if _, ok := specs["testformat1"]; !ok {
+		t.Errorf("didn't load correct spec name")
 	}
 }
 
