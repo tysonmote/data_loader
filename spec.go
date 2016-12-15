@@ -54,6 +54,7 @@ func LoadAllSpecs(dir string) (specs map[string]Spec, err error) {
 		spec, err := load(path)
 		if err != nil {
 			log.Printf("WARNING: Couldn't read %s: %s", path, err)
+			continue
 		}
 
 		specs[spec.Name] = spec

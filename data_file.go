@@ -40,6 +40,7 @@ func AllDataFiles(specs map[string]Spec, dir string) (dfs []DataFile, err error)
 		df, err := getDataFile(path)
 		if err != nil {
 			log.Printf("WARNING: Couldn't read %s: %s", path, err)
+			continue
 		}
 
 		if spec, ok := specs[df.namedSpec]; ok {
